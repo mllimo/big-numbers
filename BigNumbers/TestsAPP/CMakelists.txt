@@ -1,0 +1,19 @@
+
+# your find_package
+
+# Sources
+file(GLOB CPP_SOURCES "*/**.cpp" "*/**.cc")
+file(GLOB HPP_SOURCES "*/**.hpp" "*/**.h")
+
+add_executable("TestsAPP" ${CPP_SOURCES} ${HPP_SOURCES})
+target_link_libraries("TestsAPP"
+   # your libs
+)
+
+install(TARGETS 
+  "TestsAPP"
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+  PUBLIC_HEADER DESTINATION include
+)

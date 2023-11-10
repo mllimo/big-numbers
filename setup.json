@@ -1,0 +1,6 @@
+{
+    "Project": "BigNumbers",
+    "Dependencies": [
+        "boost/1.83.0"
+    ]
+}
