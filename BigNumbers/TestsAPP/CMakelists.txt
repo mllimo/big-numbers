@@ -1,4 +1,4 @@
-
+include_directories(..)
 # your find_package
 
 # Sources
@@ -7,7 +7,7 @@ file(GLOB HPP_SOURCES "*/**.hpp" "*/**.h")
 
 add_executable("TestsAPP" ${CPP_SOURCES} ${HPP_SOURCES})
 target_link_libraries("TestsAPP"
-   # your libs
+   IntegerLib
 )
 
 install(TARGETS 

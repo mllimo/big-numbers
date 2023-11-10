@@ -1,3 +1,4 @@
+include_directories(..)
 
 set(LIB_NAME "IntegerLib")
 option(IntegerLib_BUILD_SHARED "Build the library as shared" OFF)
