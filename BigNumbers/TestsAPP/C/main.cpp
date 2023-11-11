@@ -5,7 +5,7 @@
 int main()
 {
 	std::string numer1 = "-90000000000000000000000000000000000000000";
-	std::string numer2 =                                          "1"; // FAIL
+	std::string numer2 =                                         "1";
 
 	// Todo: Boost UT
 

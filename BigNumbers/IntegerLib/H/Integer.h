@@ -48,6 +48,7 @@ namespace big {
 
 		Integer Add_(const Integer& other) const;
 		Integer Sub_(const Integer& other) const;
+		uint64_t Add1Left(uint64_t n) const;
 
 	};
 }

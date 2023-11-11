@@ -10,17 +10,15 @@ namespace big {
 			result.is_signed_ = true; 
 			return result;
 		}
-		else if (is_signed_) { // -A + B
-			auto result = other.Sub_(*this); // B - A
+		else if (is_signed_ != other.is_signed_) { // -A + B || A + -B
+			Integer result;
 			if (IsGT(other)) {
-				result.is_signed_ = true;
+				result = Sub_(other); // A - B
+				result.is_signed_ = is_signed_;
 			}
-			return result;
-		}
-		else if (other.is_signed_) { // A + -B
-			auto result = Sub_(*this); // A - B
-			if (other.IsGT(*this)) {
-				result.is_signed_ = true;
+			else {
+				result = other.Sub_(*this); // B - A
+				result.is_signed_ = other.is_signed_;
 			}
 			return result;
 		}
@@ -30,19 +28,24 @@ namespace big {
 
 	Integer Integer::Sub(const Integer& other) const
 	{
-		if (is_signed_ && other.is_signed_) { // -A - -B
-			auto result = other.Sub(*this); // -A + B -> B - A
-			if (other.IsGT(*this)) {
-				result.is_signed_ = true;
+		if (is_signed_ && other.is_signed_) { // -A - -B -> -A + B
+			Integer result;
+			if (IsGT(other)) {
+				result = Sub_(other); // A - B
+				result.is_signed_ = is_signed_;
+			}
+			else {
+				result = other.Sub_(*this); // B - A
+				result.is_signed_ = other.is_signed_;
 			}
 			return result;
 		}
-		else if (is_signed_) { // -A - B
-			auto result = other.Add_(*this); // A + B
+		else if (is_signed_ == true && other.is_signed_ == false) { // -A - B
+			auto result = Add_(other);
 			result.is_signed_ = true;
 			return result;
 		}
-		else if (other.is_signed_) { // A - -B
+		else if (is_signed_ == false && other.is_signed_ == true) { // A - -B
 			return Add_(*this); // A + B
 		}
 
@@ -58,9 +61,10 @@ namespace big {
 
 		uint64_t carry = 0;
 
-		for (int i = size - 1; i >= 0; --i) {
-			const uint64_t a = (i < value_chunks_.size()) ? value_chunks_[i] : 0;
-			const uint64_t b = (i < other.value_chunks_.size()) ? other.value_chunks_[i] : 0;
+		int i = value_chunks_.size() - 1, j = other.value_chunks_.size() - 1;
+		while (not (i < 0 && j < 0)) {
+			const uint64_t a = (i < value_chunks_.size() && i >= 0) ? value_chunks_[i] : 0;
+			const uint64_t b = (j < other.value_chunks_.size() && j >= 0) ? other.value_chunks_[j] : 0;
 
 			// overflow and carry
 			uint64_t sum = a;
@@ -74,6 +78,8 @@ namespace big {
 			}
 
 			result.value_chunks_[i] = sum;
+			i -= 1;
+			j -= 1;
 		}
 
 		if (carry == 1) {
@@ -81,6 +87,21 @@ namespace big {
 		}
 
 		return result;
+	}
+
+	uint64_t Integer::Add1Left(uint64_t n) const
+	{
+		if (n == 0) {
+			return pow(10, CHUNK_SIZE);
+		}
+		
+		uint8_t e10 = 1;
+
+		while (e10 <= n) {
+			e10 <<= 1;
+		}
+
+		return e10 + n;
 	}
 
 	Integer Integer::Sub_(const Integer& other) const
@@ -91,27 +112,34 @@ namespace big {
 		result.value_chunks_.resize(size, 0);
 
 		uint64_t borrow = 0;
-
-		for (int i = size - 1; i >= 0; --i) {
-			uint64_t a = (i < value_chunks_.size()) ? value_chunks_[i] : 0;
-			uint64_t b = (i < other.value_chunks_.size()) ? other.value_chunks_[i] : 0;
-
-			if (a < b) {
-				std::swap(a, b);
-			}
+		int i = value_chunks_.size() - 1, j = other.value_chunks_.size() - 1;
+		while (not (i < 0 && j < 0)) {
+			uint64_t a = (i < value_chunks_.size() && i >= 0) ? value_chunks_[i] : 0;
+			uint64_t b = (j < other.value_chunks_.size() && j >= 0) ? other.value_chunks_[j] : 0;
 
 			uint64_t difference = a;
 
 			if (difference < b) {
-				difference = 0;
-				borrow = 1;
+				uint64_t a_1_in_left = Add1Left(a);
+				difference = a_1_in_left - b;
+		  		borrow = 1;
 			}
 			else {
-				difference -= b + borrow;
-				borrow = 0;
+				b = b + borrow;
+				if (difference < b) {
+					uint64_t a_1_in_left = Add1Left(a);
+					difference = a_1_in_left - b;
+					borrow = 1;
+				}
+				else {
+					difference -= b;
+					borrow = 0;
+				}
 			}
 
-			result.value_chunks_[i] = difference;
+			result.value_chunks_[std::max(i,j)] = difference;
+			i -= 1;
+			j -= 1;
 		}
 
 		while (result.value_chunks_.size() > 1 && result.value_chunks_.front() == 0) {
