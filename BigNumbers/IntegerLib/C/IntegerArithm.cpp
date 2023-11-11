@@ -11,14 +11,14 @@ namespace big {
 			return result;
 		}
 		else if (is_signed_) { // -A + B
-			auto result = other.Subs_(*this); // B - A
+			auto result = other.Sub_(*this); // B - A
 			if (IsGT(other)) {
 				result.is_signed_ = true;
 			}
 			return result;
 		}
 		else if (other.is_signed_) { // A + -B
-			auto result = Subs_(*this); // A - B
+			auto result = Sub_(*this); // A - B
 			if (other.IsGT(*this)) {
 				result.is_signed_ = true;
 			}
@@ -28,10 +28,10 @@ namespace big {
 		return Add_(other); // A + B
 	}
 
-	Integer Integer::Subs(const Integer& other) const
+	Integer Integer::Sub(const Integer& other) const
 	{
 		if (is_signed_ && other.is_signed_) { // -A - -B
-			auto result = other.Subs(*this); // -A + B -> B - A
+			auto result = other.Sub(*this); // -A + B -> B - A
 			if (other.IsGT(*this)) {
 				result.is_signed_ = true;
 			}
@@ -46,7 +46,7 @@ namespace big {
 			return Add_(*this); // A + B
 		}
 
-		return Subs_(other); // A - B
+		return Sub_(other); // A - B
 	}
 
 	Integer Integer::Add_(const Integer& other) const
@@ -83,7 +83,7 @@ namespace big {
 		return result;
 	}
 
-	Integer Integer::Subs_(const Integer& other) const
+	Integer Integer::Sub_(const Integer& other) const
 	{
 		Integer result;
 
