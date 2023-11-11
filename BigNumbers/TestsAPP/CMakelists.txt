@@ -1,14 +1,20 @@
 include_directories(..)
 # your find_package
+find_package(boost REQUIRED)
 
 # Sources
 file(GLOB CPP_SOURCES "*/**.cpp" "*/**.cc")
 file(GLOB HPP_SOURCES "*/**.hpp" "*/**.h")
 
+
 add_executable("TestsAPP" ${CPP_SOURCES} ${HPP_SOURCES})
 target_link_libraries("TestsAPP"
    IntegerLib
+   boost::boost
 )
+
+enable_testing()
+add_test("Tests" "TestsAPP")
 
 install(TARGETS 
   "TestsAPP"

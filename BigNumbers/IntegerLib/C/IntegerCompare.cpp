@@ -3,49 +3,57 @@
 namespace big {
 	bool Integer::IsGT(const Integer& other) const
 	{
-		if (is_signed_ == false && is_signed_) return true;
-		if (is_signed_ && is_signed_ == false) return false;
-		if (value_chunks_.size() > other.value_chunks_.size()) return true;
-		if (value_chunks_.size() < other.value_chunks_.size()) return false;
-		return not IsEq(other);
+		if (IsEq(other)) return false;
+		if (is_signed_ == true && other.is_signed_ == false) return false;
+		if (is_signed_ == false && other.is_signed_ == true) return true;
+		if (is_signed_ == other.is_signed_ && value_chunks_.size() < other.value_chunks_.size()) return false;
+		if (is_signed_ == other.is_signed_ && value_chunks_.size() > other.value_chunks_.size()) return true;
+
+		for (size_t i = 0; i < value_chunks_.size(); ++i) {
+			if (value_chunks_[i] > other.value_chunks_[i]) return true;
+			if (value_chunks_[i] < other.value_chunks_[i]) return false;
+		}
+
+		return false;
 	}
 
 	bool Integer::IsGTE(const Integer& other) const
 	{
-		if (is_signed_ == false && is_signed_) return true;
-		if (is_signed_ && is_signed_ == false) return false;
-		if (value_chunks_.size() > other.value_chunks_.size()) return true;
-		if (value_chunks_.size() < other.value_chunks_.size()) return false;
-		return IsEq(other);
+		return IsGT(other) || IsEq(other);
 	}
 
 	bool Integer::IsLT(const Integer& other) const
 	{
-		if (is_signed_ == false && is_signed_) return false;
-		if (is_signed_ && is_signed_ == false) return true;
-		if (value_chunks_.size() < other.value_chunks_.size()) return true;
-		if (value_chunks_.size() > other.value_chunks_.size()) return false;
-		return not IsEq(other);
+		if (IsEq(other)) return false;
+		if (is_signed_ == true && other.is_signed_ == false) return true;
+		if (is_signed_ == false && other.is_signed_ == true) return false;
+		if (is_signed_ == other.is_signed_ && value_chunks_.size() < other.value_chunks_.size()) return true;
+		if (is_signed_ == other.is_signed_ && value_chunks_.size() > other.value_chunks_.size()) return false;
+
+		for (size_t i = 0; i < value_chunks_.size(); ++i) {
+			if (value_chunks_[i] > other.value_chunks_[i]) return false;
+			if (value_chunks_[i] < other.value_chunks_[i]) return true;
+		}
+
+		return false;
 	}
 
 	bool Integer::IsLTE(const Integer& other) const
 	{
-		if (is_signed_ == false && is_signed_) return false;
-		if (is_signed_ && is_signed_ == false) return true;
-		if (value_chunks_.size() < other.value_chunks_.size()) return true;
-		if (value_chunks_.size() > other.value_chunks_.size()) return false;
-		return IsEq(other);
+		return IsLT(other) || IsEq(other);
 	}
 
 	bool Integer::IsEq(const Integer& other) const
 	{
-		if (is_signed_ != other.is_signed_) return false;
+		if (value_chunks_.size() == 1 && other.value_chunks_.size() == 1 && value_chunks_.front() == 0 && other.value_chunks_.front() == 0) return true;
 		if (value_chunks_.size() < other.value_chunks_.size()) return false;
 		if (value_chunks_.size() > other.value_chunks_.size()) return false;
 		for (size_t i = 0; i < value_chunks_.size(); ++i) {
 			if (value_chunks_[i] > other.value_chunks_[i]) return false;
 			if (value_chunks_[i] < other.value_chunks_[i]) return false;
 		}
+
+		if (is_signed_ != other.is_signed_) return false;
 		return true;
 	}
 }
