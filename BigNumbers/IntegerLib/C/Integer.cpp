@@ -6,7 +6,9 @@
 #include <IntegerLib/H/Integer.h>
 
 namespace big {
-	const size_t Integer::CHUNK_SIZE_ = (size_t)log10(pow(2, sizeof(uint64_t) * 8));
+	// It is divided by a constant K to avoid overflows between chunk operations
+	static const float K = 2;
+	const size_t Integer::CHUNK_SIZE_ = (size_t)log10(pow(2, sizeof(uint64_t) * 8)) / K;
 
 	Integer::Integer()
 	{

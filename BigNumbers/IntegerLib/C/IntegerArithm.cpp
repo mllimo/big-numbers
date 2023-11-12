@@ -52,6 +52,42 @@ namespace big {
 		return Sub_(other); // A - B
 	}
 
+	Integer Integer::Mult(const Integer& other) const
+	{
+		Integer result;
+		const uint64_t BASE = pow(10, CHUNK_SIZE_);
+
+		if (IsEq(Integer("0")) || other.IsEq(Integer("0"))) {
+			return result;
+		}
+
+		size_t size_a = value_chunks_.size();
+		size_t size_b = other.value_chunks_.size();
+
+		result.value_chunks_.resize((size_a + size_b), 0);
+
+		for (size_t i = size_a; i > 0; --i) {
+			uint64_t carry = 0;
+			for (size_t j = size_b; j > 0; --j) {
+				size_t index = i + j - 1;
+				result.value_chunks_[index] += carry + value_chunks_[i - 1] * other.value_chunks_[j - 1];
+				carry = result.value_chunks_[index] / BASE;
+				result.value_chunks_[index] %= BASE;
+			}
+			if (carry > 0) {
+				result.value_chunks_[i - 1] += carry;
+			}
+		}
+
+		while (result.value_chunks_.size() > 1 && result.value_chunks_.front() == 0) {
+			result.value_chunks_.erase(result.value_chunks_.begin());
+		}
+
+		result.is_signed_ = is_signed_ ^ other.is_signed_;
+
+		return result;
+	}
+
 	Integer Integer::Add_(const Integer& other) const
 	{
 		Integer result;
