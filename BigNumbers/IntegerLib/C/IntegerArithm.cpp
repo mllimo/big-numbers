@@ -89,10 +89,10 @@ namespace big {
 		return result;
 	}
 
-	uint64_t Integer::Add1Left(uint64_t n) const
+	uint64_t Integer::Add1Left_(uint64_t n) const
 	{
 		if (n == 0) {
-			return pow(10, CHUNK_SIZE);
+			return pow(10, CHUNK_SIZE_);
 		}
 		
 		uint8_t e10 = 1;
@@ -120,14 +120,14 @@ namespace big {
 			uint64_t difference = a;
 
 			if (difference < b) {
-				uint64_t a_1_in_left = Add1Left(a);
+				uint64_t a_1_in_left = Add1Left_(a);
 				difference = a_1_in_left - b;
 		  		borrow = 1;
 			}
 			else {
 				b = b + borrow;
 				if (difference < b) {
-					uint64_t a_1_in_left = Add1Left(a);
+					uint64_t a_1_in_left = Add1Left_(a);
 					difference = a_1_in_left - b;
 					borrow = 1;
 				}

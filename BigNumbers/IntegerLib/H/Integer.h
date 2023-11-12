@@ -30,7 +30,7 @@ namespace big {
 	private:
 		std::vector<uint64_t> value_chunks_; //< in big-endian
 		bool is_signed_ = false;
-		static const size_t CHUNK_SIZE;
+		static const size_t CHUNK_SIZE_;
 
 		/**
 		 *  Return a vector of uint64_t in big-endian order.
@@ -39,16 +39,16 @@ namespace big {
 		 *		- "12345678919"
 		 *		- Not "0001", it will cause a undefined behaviour
 		 */
-		std::vector<uint64_t> ToChunks(const std::string& number_str);
+		std::vector<uint64_t> ToChunks_(const std::string& number_str);
 
 		/**
 		 * Convert a string into a uint64_t if bytes > 0 && bytes <= 8
 		 */
-		uint64_t ToChunk(const std::string& bytes);
+		uint64_t ToChunk_(const std::string& bytes);
 
 		Integer Add_(const Integer& other) const;
 		Integer Sub_(const Integer& other) const;
-		uint64_t Add1Left(uint64_t n) const;
+		uint64_t Add1Left_(uint64_t n) const;
 
 	};
 }
