@@ -19,11 +19,11 @@ namespace big {
 		Integer Add(const Integer& other) const;
 		Integer Sub(const Integer& other) const;
 
-		bool IsGT(const Integer& other) const;
-		bool IsGTE(const Integer& other) const;
-		bool IsLT(const Integer& other) const;
-		bool IsLTE(const Integer& other) const;
-		bool IsEq(const Integer& other) const;
+		bool IsGT(const Integer& other, bool ignore_sign = false) const;
+		bool IsGTE(const Integer& other, bool ignore_sign = false) const;
+		bool IsLT(const Integer& other, bool ignore_sign = false) const;
+		bool IsLTE(const Integer& other, bool ignore_sign = false) const;
+		bool IsEq(const Integer& other, bool ignore_sign = false) const;
 
 		std::string ToString() const;
 
