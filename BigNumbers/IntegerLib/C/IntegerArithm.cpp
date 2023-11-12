@@ -12,7 +12,7 @@ namespace big {
 		}
 		else if (is_signed_ != other.is_signed_) { // -A + B || A + -B
 			Integer result;
-			if (IsGT(other)) {
+			if (IsGT(other, true)) {
 				result = Sub_(other); // A - B
 				result.is_signed_ = is_signed_;
 			}
@@ -30,7 +30,7 @@ namespace big {
 	{
 		if (is_signed_ && other.is_signed_) { // -A - -B -> -A + B
 			Integer result;
-			if (IsGT(other)) {
+			if (IsGT(other, true)) {
 				result = Sub_(other); // A - B
 				result.is_signed_ = is_signed_;
 			}
