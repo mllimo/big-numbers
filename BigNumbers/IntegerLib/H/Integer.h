@@ -18,6 +18,7 @@ namespace big {
 
 		Integer Add(const Integer& other) const;
 		Integer Sub(const Integer& other) const;
+		Integer Mult(const Integer& other) const;
 
 		bool IsGT(const Integer& other, bool ignore_sign = false) const;
 		bool IsGTE(const Integer& other, bool ignore_sign = false) const;
@@ -42,7 +43,7 @@ namespace big {
 		std::vector<uint64_t> ToChunks_(const std::string& number_str);
 
 		/**
-		 * Convert a string into a uint64_t if bytes > 0 && bytes <= 8
+		 * Convert a string into a uint64_t if bytes > 0 && bytes <= chunk_size
 		 */
 		uint64_t ToChunk_(const std::string& bytes);
 
