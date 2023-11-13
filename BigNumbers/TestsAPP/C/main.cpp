@@ -3,6 +3,23 @@
 
 #include <IntegerLib/H/Integer.h>
 
+BOOST_AUTO_TEST_CASE(integer_numeric_constructor_01) {
+    big::Integer a(1);
+    std::string r = "1";
+    BOOST_CHECK_EQUAL(r, a.ToString());
+}
+
+BOOST_AUTO_TEST_CASE(integer_numeric_constructor_02) {
+    big::Integer a(INT64_MAX);
+    std::string r = std::to_string(INT64_MAX);
+    BOOST_CHECK_EQUAL(r, a.ToString());  
+}
+
+BOOST_AUTO_TEST_CASE(integer_numeric_constructor_03) {
+    big::Integer a(INT64_MIN);
+    std::string r = std::to_string(INT64_MIN);
+    BOOST_CHECK_EQUAL(r, a.ToString());
+}
 
 BOOST_AUTO_TEST_CASE(integer_add_01) {
     big::Integer a("10000000000000000000000000000000");

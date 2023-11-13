@@ -2,13 +2,14 @@
 #include <stdexcept>
 #include <iomanip>
 #include <sstream>
+#include <bit>
 
 #include <IntegerLib/H/Integer.h>
 
 namespace big {
 	// It is divided by a constant K to avoid overflows between chunk operations
 	static const float K = 2;
-	const size_t Integer::CHUNK_SIZE_ = (size_t)log10(pow(2, sizeof(uint64_t) * 8)) / K;
+	const size_t Integer::CHUNK_SIZE_ = log10(pow(2, sizeof(uint64_t) * 8)) / K;
 
 	Integer::Integer()
 	{
@@ -17,7 +18,38 @@ namespace big {
 
 	Integer::Integer(const std::string& number_str)
 	{
+		*this = number_str;
+	}
+
+	Integer::Integer(int64_t number)
+	{
+		*this = number;
+	}
+
+	Integer& Integer::operator=(const std::string& number_str)
+	{
 		value_chunks_ = ToChunks_(number_str);
+		return *this;
+	}
+
+	Integer& Integer::operator=(int64_t number)
+	{
+		is_signed_ = number < 0;
+		uint64_t number_as_uint = (uint64_t)abs(number);
+
+		size_t digits = (size_t)ceil(log10(INT64_MAX));
+		size_t module = (size_t)pow(10, digits >> 1);
+		uint64_t upper = number_as_uint / (module);
+		uint64_t lower = number_as_uint % (module);
+
+		if (upper == 0)
+			value_chunks_.push_back(lower);
+		else {
+			value_chunks_.push_back(upper);
+			value_chunks_.push_back(lower);
+		}
+
+		return *this;
 	}
 
 	std::vector<uint64_t> Integer::ToChunks_(const std::string& number_str)
@@ -32,13 +64,13 @@ namespace big {
 		}
 
 		const size_t TOTAL_CHUNKS = (size_t)std::ceil(((float)number_str.size() - is_signed_) / (float)CHUNK_SIZE_);
-		int pos = number_str.size();
+		int pos = (int)number_str.size();
 		size_t len = CHUNK_SIZE_;
 		result.resize(TOTAL_CHUNKS);
 
 		for (int i = TOTAL_CHUNKS - 1; i >= 0; --i) {
 			pos -= CHUNK_SIZE_;
-			if (pos < is_signed_) {
+			if (pos < (int)is_signed_) {
 				len = CHUNK_SIZE_ + pos - is_signed_;
 				pos = is_signed_;
 			}
