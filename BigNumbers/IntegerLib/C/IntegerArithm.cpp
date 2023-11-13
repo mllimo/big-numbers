@@ -55,7 +55,7 @@ namespace big {
 	Integer Integer::Mult(const Integer& other) const
 	{
 		Integer result;
-		const uint64_t BASE = pow(10, CHUNK_SIZE_);
+		const uint64_t BASE = (uint64_t)pow(10, CHUNK_SIZE_);
 
 		if (IsEq(Integer("0")) || other.IsEq(Integer("0"))) {
 			return result;
@@ -97,7 +97,7 @@ namespace big {
 
 		uint64_t carry = 0;
 
-		int i = value_chunks_.size() - 1, j = other.value_chunks_.size() - 1;
+		int i = (int)value_chunks_.size() - 1, j = (int)other.value_chunks_.size() - 1;
 		while (not (i < 0 && j < 0)) {
 			const uint64_t a = (i < value_chunks_.size() && i >= 0) ? value_chunks_[i] : 0;
 			const uint64_t b = (j < other.value_chunks_.size() && j >= 0) ? other.value_chunks_[j] : 0;
@@ -128,7 +128,7 @@ namespace big {
 	uint64_t Integer::Add1Left_(uint64_t n) const
 	{
 		if (n == 0) {
-			return pow(10, CHUNK_SIZE_);
+			return (uint64_t)pow(10, CHUNK_SIZE_);
 		}
 		
 		uint8_t e10 = 1;
@@ -148,7 +148,7 @@ namespace big {
 		result.value_chunks_.resize(size, 0);
 
 		uint64_t borrow = 0;
-		int i = value_chunks_.size() - 1, j = other.value_chunks_.size() - 1;
+		int i = (int)value_chunks_.size() - 1, j = (int)other.value_chunks_.size() - 1;
 		while (not (i < 0 && j < 0)) {
 			uint64_t a = (i < value_chunks_.size() && i >= 0) ? value_chunks_[i] : 0;
 			uint64_t b = (j < other.value_chunks_.size() && j >= 0) ? other.value_chunks_[j] : 0;

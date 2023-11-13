@@ -24,6 +24,7 @@ generate_export_header(${LIB_NAME} EXPORT_FILE_NAME ${CMAKE_BINARY_DIR}/exports/
 target_include_directories(${LIB_NAME}
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/exports>
+	..
 )
 
 install(TARGETS 

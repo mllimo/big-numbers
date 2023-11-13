@@ -4,17 +4,25 @@
 #include <string>
 #include <vector>
 
+#include <IntegerLibAPI.h>
+
 namespace big {
-	class Integer {
+	class INTEGERLIB_EXPORT Integer {
 	public:
 		Integer(const Integer&) = default;
 		Integer(Integer&&) = default;
 
 		Integer();
 		Integer(const std::string& number_str);
+		Integer(int64_t number);
+
 
 		Integer& operator=(const Integer&) = default;
 		Integer& operator=(Integer&&) = default;
+		Integer& operator=(const std::string&);
+		Integer& operator=(int64_t number);
+
+
 
 		Integer Add(const Integer& other) const;
 		Integer Sub(const Integer& other) const;
